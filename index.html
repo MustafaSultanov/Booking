@@ -31,9 +31,12 @@
 				padding: 32px;
 				margin-bottom: 24px;
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 			}
 
-			h1 {
+			.header-left h1 {
 				font-size: 32px;
 				font-weight: 600;
 				color: #0f172a;
@@ -43,6 +46,35 @@
 			.subtitle {
 				color: #64748b;
 				font-size: 16px;
+			}
+
+			.sync-status {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 14px;
+				color: #64748b;
+				padding: 8px 16px;
+				background: #f1f5f9;
+				border-radius: 8px;
+			}
+
+			.sync-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: #16a34a;
+				animation: pulse 2s infinite;
+			}
+
+			@keyframes pulse {
+				0%,
+				100% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.5;
+				}
 			}
 
 			.week-nav {
@@ -108,15 +140,12 @@
 			.stat-card.booked .stat-value {
 				color: #dc2626;
 			}
-
 			.stat-card.available .stat-value {
 				color: #16a34a;
 			}
-
 			.stat-card.past .stat-value {
 				color: #ca8a04;
 			}
-
 			.stat-card.total .stat-value {
 				color: #2563eb;
 			}
@@ -378,6 +407,9 @@
 
 				.header {
 					padding: 24px;
+					flex-direction: column;
+					gap: 16px;
+					align-items: flex-start;
 				}
 
 				h1 {
@@ -402,8 +434,14 @@
 	<body>
 		<div class="container">
 			<div class="header">
-				<h1>🏐 Валейбол Залы</h1>
-				<p class="subtitle">Жумалык брондоо системасы</p>
+				<div class="header-left">
+					<h1>🏐 Валейбол Залы</h1>
+					<p class="subtitle">Жумалык брондоо системасы</p>
+				</div>
+				<div class="sync-status">
+					<div class="sync-dot"></div>
+					<span>Сакталды</span>
+				</div>
 			</div>
 
 			<div class="week-nav">
@@ -413,7 +451,6 @@
 			</div>
 
 			<div class="stats-grid" id="statsGrid"></div>
-
 			<div class="days-grid" id="daysGrid"></div>
 
 			<div class="booked-section">
@@ -438,10 +475,13 @@
 		</div>
 
 		<script>
-			let bookedSlots =
-				JSON.parse(localStorage.getItem("weeklyBookedSlots")) || [];
+			// LocalStorage менен туруктуу сактоо
+			const STORAGE_KEY = "volleyball_bookings_v1";
+
+			let bookedSlots = [];
 			let selectedSlot = null;
 			let currentWeekOffset = 0;
+			let nextId = 1;
 
 			const dayNames = [
 				"Дүйшөмбү",
@@ -452,6 +492,35 @@
 				"Ишемби",
 				"Жекшемби",
 			];
+
+			// LocalStorage'ден жүктөө
+			function loadBookings() {
+				try {
+					const saved = localStorage.getItem(STORAGE_KEY);
+					if (saved) {
+						const data = JSON.parse(saved);
+						bookedSlots = data.bookings || [];
+						nextId = data.nextId || 1;
+					}
+				} catch (error) {
+					console.error("Жүктөөдө ката:", error);
+					bookedSlots = [];
+				}
+			}
+
+			// LocalStorage'ге сактоо
+			function saveBookings() {
+				try {
+					const data = {
+						bookings: bookedSlots,
+						nextId: nextId,
+						lastUpdated: new Date().toISOString(),
+					};
+					localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+				} catch (error) {
+					console.error("Сактоодо ката:", error);
+				}
+			}
 
 			function getWeekDates(offset = 0) {
 				const today = new Date();
@@ -574,7 +643,6 @@
 						slotDate.setHours(hour, 0, 0, 0);
 
 						const startTime = `${hour.toString().padStart(2, "0")}:00`;
-						const endTime = `${(hour + 1).toString().padStart(2, "0")}:00`;
 
 						const isPast = slotDate < now;
 						const isBooked = bookedSlots.some(
@@ -642,7 +710,7 @@
 				const endTime = `${(hour + 1).toString().padStart(2, "0")}:00`;
 
 				const date = new Date(dateKey);
-				const dayName = dayNames[date.getDay() - 1] || dayNames[6];
+				const dayName = dayNames[date.getDay() === 0 ? 6 : date.getDay() - 1];
 
 				document.getElementById(
 					"modalText"
@@ -660,30 +728,24 @@
 			function confirmBooking() {
 				if (selectedSlot) {
 					const newBooking = {
+						id: nextId++,
 						date: selectedSlot.date,
 						start: selectedSlot.hour,
 						end: selectedSlot.hour + 1,
-						bookedAt: new Date().toISOString(),
+						created_at: new Date().toISOString(),
 					};
 
 					bookedSlots.push(newBooking);
-					localStorage.setItem(
-						"weeklyBookedSlots",
-						JSON.stringify(bookedSlots)
-					);
-
+					saveBookings();
 					closeModal();
 					render();
 				}
 			}
 
-			function cancelBooking(index) {
+			function cancelBooking(id) {
 				if (confirm("Бул брондоону жокко чыгарасызбы?")) {
-					bookedSlots.splice(index, 1);
-					localStorage.setItem(
-						"weeklyBookedSlots",
-						JSON.stringify(bookedSlots)
-					);
+					bookedSlots = bookedSlots.filter((slot) => slot.id !== id);
+					saveBookings();
 					render();
 				}
 			}
@@ -703,9 +765,10 @@
 				});
 
 				list.innerHTML = sortedBookings
-					.map((slot, index) => {
+					.map((slot) => {
 						const date = new Date(slot.date);
-						const dayName = dayNames[date.getDay() - 1] || dayNames[6];
+						const dayName =
+							dayNames[date.getDay() === 0 ? 6 : date.getDay() - 1];
 						const startTime = `${slot.start.toString().padStart(2, "0")}:00`;
 						const endTime = `${slot.end.toString().padStart(2, "0")}:00`;
 
@@ -717,7 +780,11 @@
 							date
 						)}</div>
                         </div>
-                        <button class="cancel-btn" onclick="cancelBooking(${index})">Жокко чыгаруу</button>
+                        <button class="cancel-btn" onclick="cancelBooking(${
+													slot.id
+												})">
+                            Жокко чыгаруу
+                        </button>
                     </div>
                 `;
 					})
@@ -731,10 +798,11 @@
 				renderBookedList();
 			}
 
-			// Ар 30 секундада жаңыртуу
+			// Ар 30 секундада жаңыртуу (убакыттын өтүшү үчүн)
 			setInterval(render, 30000);
 
 			// Инициализация
+			loadBookings();
 			render();
 		</script>
 	</body>

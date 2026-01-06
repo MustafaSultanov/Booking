@@ -34,6 +34,8 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+				flex-wrap: wrap;
+				gap: 16px;
 			}
 
 			.header-left h1 {
@@ -48,33 +50,33 @@
 				font-size: 16px;
 			}
 
-			.sync-status {
+			.header-actions {
 				display: flex;
-				align-items: center;
-				gap: 8px;
-				font-size: 14px;
-				color: #64748b;
-				padding: 8px 16px;
-				background: #f1f5f9;
+				gap: 12px;
+			}
+
+			.sync-btn {
+				background: #2563eb;
+				color: white;
+				border: none;
+				padding: 10px 20px;
 				border-radius: 8px;
+				cursor: pointer;
+				font-weight: 500;
+				transition: all 0.2s;
+				font-size: 14px;
 			}
 
-			.sync-dot {
-				width: 8px;
-				height: 8px;
-				border-radius: 50%;
+			.sync-btn:hover {
+				background: #1d4ed8;
+			}
+
+			.sync-btn.share {
 				background: #16a34a;
-				animation: pulse 2s infinite;
 			}
 
-			@keyframes pulse {
-				0%,
-				100% {
-					opacity: 1;
-				}
-				50% {
-					opacity: 0.5;
-				}
+			.sync-btn.share:hover {
+				background: #15803d;
 			}
 
 			.week-nav {
@@ -281,9 +283,11 @@
 				background: white;
 				padding: 32px;
 				border-radius: 16px;
-				max-width: 400px;
+				max-width: 500px;
 				width: 90%;
 				box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+				max-height: 90vh;
+				overflow-y: auto;
 			}
 
 			.modal-content h2 {
@@ -315,12 +319,17 @@
 				transition: all 0.2s;
 			}
 
+			.modal-btn:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
 			.modal-btn.confirm {
 				background: #16a34a;
 				color: white;
 			}
 
-			.modal-btn.confirm:hover {
+			.modal-btn.confirm:hover:not(:disabled) {
 				background: #15803d;
 			}
 
@@ -331,6 +340,42 @@
 
 			.modal-btn.cancel:hover {
 				background: #e2e8f0;
+			}
+
+			.sync-link {
+				background: #f1f5f9;
+				padding: 16px;
+				border-radius: 8px;
+				word-break: break-all;
+				font-family: monospace;
+				font-size: 12px;
+				margin: 16px 0;
+			}
+
+			.copy-btn {
+				width: 100%;
+				background: #2563eb;
+				color: white;
+				border: none;
+				padding: 12px;
+				border-radius: 8px;
+				cursor: pointer;
+				font-weight: 600;
+				margin-top: 12px;
+			}
+
+			.copy-btn:hover {
+				background: #1d4ed8;
+			}
+
+			.info-box {
+				background: #eff6ff;
+				border: 1px solid #bfdbfe;
+				color: #1e40af;
+				padding: 16px;
+				border-radius: 8px;
+				margin: 16px 0;
+				font-size: 14px;
 			}
 
 			.booked-section {
@@ -407,13 +452,18 @@
 
 				.header {
 					padding: 24px;
-					flex-direction: column;
-					gap: 16px;
-					align-items: flex-start;
 				}
 
-				h1 {
+				.header-left h1 {
 					font-size: 24px;
+				}
+
+				.header-actions {
+					width: 100%;
+				}
+
+				.sync-btn {
+					flex: 1;
 				}
 
 				.stats-grid {
@@ -438,9 +488,11 @@
 					<h1>🏐 Валейбол Залы</h1>
 					<p class="subtitle">Жумалык брондоо системасы</p>
 				</div>
-				<div class="sync-status">
-					<div class="sync-dot"></div>
-					<span>Сакталды</span>
+				<div class="header-actions">
+					<button class="sync-btn share" onclick="shareData()">
+						📤 Бөлүшүү
+					</button>
+					<button class="sync-btn" onclick="loadFromLink()">📥 Жүктөө</button>
 				</div>
 			</div>
 
@@ -464,7 +516,10 @@
 				<h2>Брондоо</h2>
 				<p id="modalText"></p>
 				<div class="modal-buttons">
-					<button class="modal-btn confirm" onclick="confirmBooking()">
+					<button
+						class="modal-btn confirm"
+						id="confirmBtn"
+						onclick="confirmBooking()">
 						Брондоо
 					</button>
 					<button class="modal-btn cancel" onclick="closeModal()">
@@ -474,9 +529,56 @@
 			</div>
 		</div>
 
+		<div class="modal" id="shareModal">
+			<div class="modal-content">
+				<h2>📤 Маалыматты бөлүшүү</h2>
+				<p>Бул шилтемени башка телефонго жөнөтүңүз же көчүрүп алыңыз:</p>
+				<div class="sync-link" id="shareLink"></div>
+				<button class="copy-btn" onclick="copyLink()">Шилтемени көчүрүү</button>
+				<div class="info-box">
+					💡 Башка телефондо бул сайтты ачып, "📥 Жүктөө" баскычын басып,
+					шилтемени киргизиңиз
+				</div>
+				<div class="modal-buttons">
+					<button class="modal-btn cancel" onclick="closeShareModal()">
+						Жабуу
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="loadModal">
+			<div class="modal-content">
+				<h2>📥 Маалыматты жүктөө</h2>
+				<p>Шилтемени же кодду киргизиңиз:</p>
+				<textarea
+					id="loadInput"
+					style="
+						width: 100%;
+						min-height: 100px;
+						padding: 12px;
+						border: 2px solid #e2e8f0;
+						border-radius: 8px;
+						font-family: monospace;
+						font-size: 12px;
+						margin: 16px 0;
+					"></textarea>
+				<div class="info-box">
+					⚠️ Учур: Жүктөгөндөн кийин учурдагы маалыматтар алмаштырылат
+				</div>
+				<div class="modal-buttons">
+					<button class="modal-btn confirm" onclick="confirmLoad()">
+						Жүктөө
+					</button>
+					<button class="modal-btn cancel" onclick="closeLoadModal()">
+						Жокко чыгаруу
+					</button>
+				</div>
+			</div>
+		</div>
+
 		<script>
-			// LocalStorage менен туруктуу сактоо
-			const STORAGE_KEY = "volleyball_bookings_v1";
+			const STORAGE_KEY = "volleyball_bookings_v2";
 
 			let bookedSlots = [];
 			let selectedSlot = null;
@@ -503,8 +605,7 @@
 						nextId = data.nextId || 1;
 					}
 				} catch (error) {
-					console.error("Жүктөөдө ката:", error);
-					bookedSlots = [];
+					console.error("Жүктөө катасы:", error);
 				}
 			}
 
@@ -518,7 +619,113 @@
 					};
 					localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 				} catch (error) {
-					console.error("Сактоодо ката:", error);
+					console.error("Сактоо катасы:", error);
+				}
+			}
+
+			// Маалыматты бөлүшүү
+			function shareData() {
+				const data = {
+					bookings: bookedSlots,
+					nextId: nextId,
+					version: 2,
+				};
+				const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
+				const link = window.location.href.split("?")[0] + "?data=" + encoded;
+
+				document.getElementById("shareLink").textContent = link;
+				document.getElementById("shareModal").classList.add("active");
+			}
+
+			function closeShareModal() {
+				document.getElementById("shareModal").classList.remove("active");
+			}
+
+			function copyLink() {
+				const link = document.getElementById("shareLink").textContent;
+				navigator.clipboard
+					.writeText(link)
+					.then(() => {
+						alert("Шилтеме көчүрүлдү! ✓");
+					})
+					.catch(() => {
+						// Fallback
+						const textarea = document.createElement("textarea");
+						textarea.value = link;
+						document.body.appendChild(textarea);
+						textarea.select();
+						document.execCommand("copy");
+						document.body.removeChild(textarea);
+						alert("Шилтеме көчүрүлдү! ✓");
+					});
+			}
+
+			// Шилтемеден жүктөө
+			function loadFromLink() {
+				document.getElementById("loadModal").classList.add("active");
+			}
+
+			function closeLoadModal() {
+				document.getElementById("loadModal").classList.remove("active");
+				document.getElementById("loadInput").value = "";
+			}
+
+			function confirmLoad() {
+				try {
+					const input = document.getElementById("loadInput").value.trim();
+					let data;
+
+					// URL'ден data параметрин алуу
+					if (input.includes("?data=")) {
+						const urlData = input.split("?data=")[1];
+						data = JSON.parse(decodeURIComponent(atob(urlData)));
+					} else {
+						// Түз кодду жүктөө
+						data = JSON.parse(decodeURIComponent(atob(input)));
+					}
+
+					if (data.bookings && data.nextId) {
+						bookedSlots = data.bookings;
+						nextId = data.nextId;
+						saveBookings();
+						render();
+						closeLoadModal();
+						alert("Маалыматтар жүктөлдү! ✓");
+					} else {
+						alert("Ката: Туура эмес формат");
+					}
+				} catch (error) {
+					console.error("Жүктөө катасы:", error);
+					alert(
+						"Ката: Маалыматтарды жүктөө мүмкүн эмес. Шилтеме туура экенин текшериңиз."
+					);
+				}
+			}
+
+			// URL параметринен автоматтык жүктөө
+			function checkUrlData() {
+				const urlParams = new URLSearchParams(window.location.search);
+				const dataParam = urlParams.get("data");
+
+				if (dataParam) {
+					try {
+						const data = JSON.parse(decodeURIComponent(atob(dataParam)));
+						if (data.bookings && data.nextId) {
+							if (confirm("Жаңы маалыматтар табылды. Жүктөгөнгө макулсузбу?")) {
+								bookedSlots = data.bookings;
+								nextId = data.nextId;
+								saveBookings();
+								// URL'ду тазалоо
+								window.history.replaceState(
+									{},
+									document.title,
+									window.location.pathname
+								);
+							}
+						}
+					} catch (error) {
+						console.error("URL маалыматтарын жүктөө катасы:", error);
+					}
 				}
 			}
 
@@ -798,11 +1005,12 @@
 				renderBookedList();
 			}
 
-			// Ар 30 секундада жаңыртуу (убакыттын өтүшү үчүн)
+			// Ар 30 секундада жаңыртуу
 			setInterval(render, 30000);
 
 			// Инициализация
 			loadBookings();
+			checkUrlData();
 			render();
 		</script>
 	</body>

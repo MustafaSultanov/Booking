@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Волейбол Залы</title>
 		<style>
-			/* --- СТИЛДЕР (Өзгөртүүсүз калды, бир аз кошумчаланды) --- */
+			/* --- СТИЛДЕР (Өзгөртүүсүз калды) --- */
 			* {
 				margin: 0;
 				padding: 0;
@@ -16,8 +16,6 @@
 				background: #f1f5f9;
 				color: #1e293b;
 			}
-
-			/* Башкы баракча үчүн стилдер */
 			#home-page {
 				display: flex;
 				flex-direction: column;
@@ -32,16 +30,6 @@
 				color: #0f172a;
 				margin-bottom: 20px;
 			}
-			.admin-link {
-				text-decoration: none;
-				background: #3b82f6;
-				color: white;
-				padding: 12px 24px;
-				border-radius: 12px;
-				font-weight: 600;
-			}
-
-			/* Админ баракча үчүн стилдер */
 			#admin-page {
 				display: none;
 				padding: 15px;
@@ -65,8 +53,6 @@
 				text-decoration: none;
 				font-size: 14px;
 			}
-
-			/* Калган бардык функционалдык стилдер (мурунку коддогудай) */
 			.sync-status {
 				display: inline-flex;
 				align-items: center;
@@ -168,8 +154,6 @@
 				border-radius: 6px;
 				cursor: pointer;
 			}
-
-			/* Модалка */
 			.modal {
 				display: none;
 				position: fixed;
@@ -201,7 +185,6 @@
 			<p style="color: #64748b; margin-bottom: 30px">
 				Волейбол залынын брондоо системасына кош келиңиз.
 			</p>
-			<!-- <a href="#/admin" class="admin-link">Админ панелге өтүү</a> -->
 		</div>
 
 		<div id="admin-page">
@@ -268,23 +251,20 @@
 				"Жекшемби",
 			];
 
-			// --- РОУТИНГ (Баракчаларды которуу) ---
 			function handleRoute() {
 				const path = window.location.hash;
 				if (path === "#/admin") {
 					document.getElementById("home-page").style.display = "none";
 					document.getElementById("admin-page").style.display = "block";
-					loadData(); // Админге киргенде маалыматты жүктөө
+					loadData();
 				} else {
 					document.getElementById("home-page").style.display = "flex";
 					document.getElementById("admin-page").style.display = "none";
 				}
 			}
-
 			window.addEventListener("hashchange", handleRoute);
 			window.addEventListener("load", handleRoute);
 
-			// --- АДМИН ЛОГИКАСЫ ---
 			function updateStatus(type, text) {
 				const el = document.getElementById("syncStatus");
 				if (el) {
@@ -334,6 +314,13 @@
 				}
 			}
 
+			// Саатты форматтоо (24:00 -> 00:00, 25:00 -> 01:00)
+			function formatHour(h) {
+				if (h === 24) return "00:00";
+				if (h > 24) return `0${h - 24}:00`;
+				return `${h}:00`;
+			}
+
 			function render() {
 				const now = new Date();
 				const startOfWeek = new Date(now);
@@ -354,24 +341,33 @@
 				).textContent = `${dates[0].getDate()}.${
 					dates[0].getMonth() + 1
 				} - ${dates[6].getDate()}.${dates[6].getMonth() + 1}`;
-
 				const grid = document.getElementById("daysGrid");
 				grid.innerHTML = "";
 
 				dates.forEach((date, idx) => {
 					const dateStr = date.toISOString().split("T")[0];
 					let slotsHtml = "";
-					for (let h = 9; h < 24; h++) {
+
+					// СААТТАР: 09:00дөн түнкү 02:00гө чейин (26га чейин)
+					for (let h = 9; h < 26; h++) {
 						const isBooked = bookedSlots.find(
 							(s) => s.date === dateStr && parseInt(s.start) === h
 						);
-						const isPast = new Date(date).setHours(h, 0, 0) < now;
+
+						// Өткөн убакытты текшерүү
+						const slotTime = new Date(date);
+						slotTime.setHours(h, 0, 0);
+						const isPast = slotTime < now;
+
 						let cls = isBooked ? "booked" : isPast ? "past" : "available";
 						let act =
 							!isBooked && !isPast
 								? `onclick="openModal('${dateStr}', ${h})"`
 								: "";
-						slotsHtml += `<div class="time-slot ${cls}" ${act}>${h}:00</div>`;
+
+						slotsHtml += `<div class="time-slot ${cls}" ${act}>${formatHour(
+							h
+						)}</div>`;
 					}
 					grid.innerHTML += `
             <div class="day-card">
@@ -389,7 +385,7 @@
 						.map(
 							(s) => `
           <div class="booked-item">
-            <div><b>${s.date}</b> | ${s.start}:00</div>
+            <div><b>${s.date}</b> | ${formatHour(parseInt(s.start))}</div>
             <button class="cancel-btn" onclick="deleteBooking('${
 							s._id || s.id
 						}')">Өчүрүү</button>
@@ -402,7 +398,7 @@
 				selectedSlot = { date, hour };
 				document.getElementById(
 					"modalText"
-				).textContent = `${date} күнү саат ${hour}:00го брондойсузбу?`;
+				).textContent = `${date} күнү саат ${formatHour(hour)}го брондойсузбу?`;
 				document.getElementById("bookingModal").classList.add("active");
 			}
 			function closeModal() {

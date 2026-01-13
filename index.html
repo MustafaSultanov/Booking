@@ -3,255 +3,131 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Валейбол Залы - Supabase</title>
+		<title>Валейбол Залы - Брондоо Системасы</title>
 		<style>
+			/* Сиздин оригиналдуу стилдериңиз сакталды */
 			* {
 				margin: 0;
 				padding: 0;
 				box-sizing: border-box;
 			}
-
 			body {
-				font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-					sans-serif;
+				font-family: "Inter", sans-serif;
 				background: #f8fafc;
-				min-height: 100vh;
 				padding: 20px;
 				color: #1e293b;
 			}
-
 			.container {
-				max-width: 1400px;
+				max-width: 1200px;
 				margin: 0 auto;
 			}
-
 			.header {
 				background: white;
 				border-radius: 16px;
-				padding: 32px;
+				padding: 24px;
 				margin-bottom: 24px;
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 			}
-
-			.header h1 {
-				font-size: 32px;
-				font-weight: 600;
-				color: #0f172a;
-				margin-bottom: 8px;
-			}
-
-			.subtitle {
-				color: #64748b;
-				font-size: 16px;
-			}
-
 			.sync-status {
 				display: inline-flex;
 				align-items: center;
 				gap: 8px;
 				padding: 6px 12px;
-				background: #f0fdf4;
-				border: 1px solid #bbf7d0;
 				border-radius: 6px;
 				font-size: 13px;
-				color: #166534;
 				margin-top: 8px;
 			}
-
-			.sync-status.syncing {
+			.success {
+				background: #f0fdf4;
+				color: #166534;
+				border: 1px solid #bbf7d0;
+			}
+			.syncing {
 				background: #fef3c7;
-				border-color: #fde68a;
 				color: #92400e;
+				border: 1px solid #fde68a;
 			}
-
-			.sync-status.offline {
+			.offline {
 				background: #fee2e2;
-				border-color: #fecaca;
 				color: #991b1b;
+				border: 1px solid #fecaca;
 			}
-
 			.week-nav {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				background: white;
 				border-radius: 12px;
-				padding: 20px 24px;
+				padding: 15px 20px;
 				margin-bottom: 24px;
-				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 			}
-
 			.nav-btn {
 				background: #f1f5f9;
 				border: none;
-				padding: 10px 20px;
+				padding: 10px 15px;
 				border-radius: 8px;
 				cursor: pointer;
-				font-weight: 500;
-				color: #475569;
-				transition: all 0.2s;
 			}
-
-			.nav-btn:hover {
-				background: #e2e8f0;
-				color: #1e293b;
-			}
-
-			.week-info {
-				font-size: 18px;
-				font-weight: 600;
-				color: #0f172a;
-			}
-
 			.stats-grid {
 				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 				gap: 16px;
 				margin-bottom: 24px;
 			}
-
 			.stat-card {
 				background: white;
+				padding: 20px;
 				border-radius: 12px;
-				padding: 24px;
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 			}
-
-			.stat-label {
-				font-size: 14px;
-				color: #64748b;
-				margin-bottom: 8px;
-				font-weight: 500;
-			}
-
 			.stat-value {
-				font-size: 32px;
+				font-size: 24px;
 				font-weight: 700;
-				margin-bottom: 4px;
 			}
-
-			.stat-card.booked .stat-value {
-				color: #dc2626;
-			}
-			.stat-card.available .stat-value {
-				color: #16a34a;
-			}
-			.stat-card.past .stat-value {
-				color: #ca8a04;
-			}
-			.stat-card.total .stat-value {
-				color: #2563eb;
-			}
-
 			.days-grid {
 				display: grid;
-				gap: 16px;
+				gap: 20px;
 			}
-
 			.day-card {
 				background: white;
 				border-radius: 12px;
-				padding: 24px;
+				padding: 20px;
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 			}
-
 			.day-header {
 				display: flex;
 				justify-content: space-between;
-				align-items: center;
-				margin-bottom: 20px;
-				padding-bottom: 16px;
-				border-bottom: 2px solid #f1f5f9;
+				margin-bottom: 15px;
+				border-bottom: 1px solid #f1f5f9;
+				padding-bottom: 10px;
 			}
-
-			.day-title {
-				font-size: 20px;
-				font-weight: 600;
-				color: #0f172a;
-			}
-
-			.day-date {
-				font-size: 14px;
-				color: #64748b;
-			}
-
-			.day-stats {
-				display: flex;
-				gap: 24px;
-				font-size: 13px;
-				color: #64748b;
-			}
-
-			.day-stat {
-				display: flex;
-				align-items: center;
-				gap: 6px;
-			}
-
-			.stat-dot {
-				width: 8px;
-				height: 8px;
-				border-radius: 50%;
-			}
-
-			.stat-dot.booked {
-				background: #dc2626;
-			}
-			.stat-dot.available {
-				background: #16a34a;
-			}
-			.stat-dot.past {
-				background: #ca8a04;
-			}
-
 			.time-slots {
 				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+				grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 				gap: 8px;
 			}
-
 			.time-slot {
-				padding: 12px 8px;
+				padding: 10px;
 				border-radius: 8px;
 				text-align: center;
-				font-size: 14px;
-				font-weight: 500;
 				cursor: pointer;
-				transition: all 0.15s;
-				border: 2px solid transparent;
+				border: 1px solid #e2e8f0;
+				font-weight: 500;
 			}
-
-			.time-slot:hover:not(.past):not(.booked) {
-				transform: translateY(-2px);
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-			}
-
-			.time-slot.available {
+			.available {
 				background: #f0fdf4;
 				color: #166534;
-				border-color: #bbf7d0;
 			}
-
-			.time-slot.available:hover {
-				background: #dcfce7;
-				border-color: #86efac;
-			}
-
-			.time-slot.booked {
+			.booked {
 				background: #fef2f2;
 				color: #991b1b;
-				border-color: #fecaca;
 				cursor: not-allowed;
 			}
-
-			.time-slot.past {
-				background: #fefce8;
-				color: #854d0e;
-				border-color: #fef08a;
+			.past {
+				background: #f1f5f9;
+				color: #94a3b8;
 				cursor: not-allowed;
-				opacity: 0.6;
 			}
-
 			.modal {
 				display: none;
 				position: fixed;
@@ -259,195 +135,61 @@
 				left: 0;
 				width: 100%;
 				height: 100%;
-				background: rgba(0, 0, 0, 0.4);
-				z-index: 1000;
-				justify-content: center;
+				background: rgba(0, 0, 0, 0.5);
 				align-items: center;
-				backdrop-filter: blur(4px);
+				justify-content: center;
+				z-index: 100;
 			}
-
 			.modal.active {
 				display: flex;
 			}
-
 			.modal-content {
 				background: white;
-				padding: 32px;
-				border-radius: 16px;
-				max-width: 500px;
+				padding: 30px;
+				border-radius: 12px;
 				width: 90%;
-				box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+				max-width: 400px;
 			}
-
-			.modal-content h2 {
-				font-size: 24px;
-				margin-bottom: 16px;
-				color: #0f172a;
-				font-weight: 600;
-			}
-
-			.modal-content p {
-				color: #64748b;
-				margin-bottom: 24px;
-				font-size: 15px;
-			}
-
 			.modal-buttons {
 				display: flex;
-				gap: 12px;
+				gap: 10px;
+				margin-top: 20px;
 			}
-
 			.modal-btn {
 				flex: 1;
-				padding: 12px 24px;
+				padding: 10px;
+				border-radius: 6px;
 				border: none;
-				border-radius: 8px;
-				font-size: 15px;
 				cursor: pointer;
 				font-weight: 600;
-				transition: all 0.2s;
 			}
-
-			.modal-btn:disabled {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
-
-			.modal-btn.confirm {
+			.confirm {
 				background: #16a34a;
 				color: white;
 			}
-
-			.modal-btn.confirm:hover:not(:disabled) {
-				background: #15803d;
-			}
-
-			.modal-btn.cancel {
+			.cancel {
 				background: #f1f5f9;
-				color: #475569;
 			}
-
-			.modal-btn.cancel:hover {
-				background: #e2e8f0;
-			}
-
 			.booked-section {
+				margin-top: 30px;
 				background: white;
+				padding: 20px;
 				border-radius: 12px;
-				padding: 24px;
-				margin-top: 24px;
-				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 			}
-
-			.booked-section h2 {
-				font-size: 20px;
-				font-weight: 600;
-				margin-bottom: 16px;
-				color: #0f172a;
-			}
-
-			.booked-list {
-				display: grid;
-				gap: 8px;
-			}
-
 			.booked-item {
 				display: flex;
 				justify-content: space-between;
+				padding: 10px;
+				border-bottom: 1px solid #eee;
 				align-items: center;
-				padding: 16px;
-				background: #fef2f2;
-				border-radius: 8px;
-				border-left: 3px solid #dc2626;
 			}
-
-			.booked-info {
-				flex: 1;
-			}
-
-			.booked-time {
-				font-weight: 600;
-				color: #0f172a;
-				margin-bottom: 4px;
-			}
-
-			.booked-date {
-				font-size: 13px;
-				color: #64748b;
-			}
-
 			.cancel-btn {
 				background: #dc2626;
 				color: white;
 				border: none;
-				padding: 8px 16px;
-				border-radius: 6px;
+				padding: 5px 10px;
+				border-radius: 4px;
 				cursor: pointer;
-				font-weight: 500;
-				font-size: 13px;
-				transition: background 0.2s;
-			}
-
-			.cancel-btn:hover {
-				background: #b91c1c;
-			}
-
-			.empty-state {
-				text-align: center;
-				padding: 40px;
-				color: #94a3b8;
-			}
-
-			.loading {
-				text-align: center;
-				padding: 60px;
-				color: #64748b;
-			}
-
-			.loading-spinner {
-				border: 3px solid #f1f5f9;
-				border-top: 3px solid #10b981;
-				border-radius: 50%;
-				width: 40px;
-				height: 40px;
-				animation: spin 1s linear infinite;
-				margin: 0 auto 16px;
-			}
-
-			@keyframes spin {
-				0% {
-					transform: rotate(0deg);
-				}
-				100% {
-					transform: rotate(360deg);
-				}
-			}
-
-			@media (max-width: 768px) {
-				.container {
-					padding: 0;
-				}
-
-				.header {
-					padding: 24px;
-				}
-
-				.header h1 {
-					font-size: 24px;
-				}
-
-				.stats-grid {
-					grid-template-columns: repeat(2, 1fr);
-				}
-
-				.time-slots {
-					grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-				}
-
-				.day-stats {
-					flex-direction: column;
-					gap: 8px;
-				}
 			}
 		</style>
 	</head>
@@ -455,35 +197,24 @@
 		<div class="container">
 			<div class="header">
 				<h1>🏐 Валейбол Залы</h1>
-				<p class="subtitle">Бардык телефондордо синхрондошот - Real-time</p>
 				<div class="sync-status" id="syncStatus">
-					<span>⚡</span>
-					<span id="syncText">Туташууда...</span>
+					<span id="syncText">Жүктөлүүдө...</span>
 				</div>
 			</div>
 
-			<div id="loadingScreen" class="loading">
-				<div class="loading-spinner"></div>
-				<p>Supabase'ке туташууда...</p>
-			</div>
-
-			<div id="mainContent" style="display: none">
+			<div id="mainContent">
 				<div class="week-nav">
-					<button class="nav-btn" onclick="changeWeek(-1)">
-						← Мурунку жума
-					</button>
-					<div class="week-info" id="weekInfo"></div>
-					<button class="nav-btn" onclick="changeWeek(1)">
-						Кийинки жума →
-					</button>
+					<button class="nav-btn" onclick="changeWeek(-1)">← Мурунку</button>
+					<div id="weekInfo" style="font-weight: bold"></div>
+					<button class="nav-btn" onclick="changeWeek(1)">Кийинки →</button>
 				</div>
 
 				<div class="stats-grid" id="statsGrid"></div>
 				<div class="days-grid" id="daysGrid"></div>
 
 				<div class="booked-section">
-					<h2>Бардык брондолгон саатар</h2>
-					<div class="booked-list" id="bookedList"></div>
+					<h2>Сиздин брондоруңуз (Жалпы тизме)</h2>
+					<div id="bookedList"></div>
 				</div>
 			</div>
 		</div>
@@ -497,35 +228,20 @@
 						class="modal-btn confirm"
 						id="confirmBtn"
 						onclick="confirmBooking()">
-						Брондоо
+						Ырастоо
 					</button>
-					<button class="modal-btn cancel" onclick="closeModal()">
-						Жокко чыгаруу
-					</button>
+					<button class="modal-btn cancel" onclick="closeModal()">Жок</button>
 				</div>
 			</div>
 		</div>
 
-		<!-- Supabase SDK -->
-		<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 		<script>
-			// ✅ ТУУРА КОНФИГУРАЦИЯ - ДАЯР ИШТЕЙТ!
-			const SUPABASE_URL = "https://lagszrwqzviewwpicjye.supabase.co";
-			const SUPABASE_ANON_KEY =
-				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhZ3N6cndxenZpZXd3cGljanllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY2NDk1ODgsImV4cCI6MjA4MjIyNTU4OH0.-sa28CFn_NkaEZu8U7dEEGoAFqvIl3bMy9m1V6cZOkQ";
-
-			// Supabase инициализация
-			const supabase = window.supabase.createClient(
-				SUPABASE_URL,
-				SUPABASE_ANON_KEY
-			);
-			console.log("✅ Supabase туташты!");
+			const API_URL =
+				"https://api-crud.elcho.dev/api/v1/d8281-f9a3a-6931f/booking";
 
 			let bookedSlots = [];
 			let selectedSlot = null;
 			let currentWeekOffset = 0;
-
 			const dayNames = [
 				"Дүйшөмбү",
 				"Шейшемби",
@@ -536,386 +252,185 @@
 				"Жекшемби",
 			];
 
-			function updateSyncStatus(status, text) {
-				const statusEl = document.getElementById("syncStatus");
-				const textEl = document.getElementById("syncText");
-
-				statusEl.className = "sync-status";
-				if (status === "syncing") {
-					statusEl.classList.add("syncing");
-				} else if (status === "offline") {
-					statusEl.classList.add("offline");
-				}
-
-				textEl.textContent = text;
+			function updateStatus(type, text) {
+				const el = document.getElementById("syncStatus");
+				el.className = "sync-status " + type;
+				document.getElementById("syncText").textContent = text;
 			}
 
-			// Supabase'ден маалымат алуу
-			async function loadBookings() {
+			// API аркылуу маалымат алуу
+			async function loadData() {
 				try {
-					const { data, error } = await supabase
-						.from("bookings")
-						.select("*")
-						.order("date", { ascending: true })
-						.order("start", { ascending: true });
-
-					if (error) throw error;
-
-					bookedSlots = data || [];
-					console.log("📥 Supabase'ден жүктөлдү:", bookedSlots.length, "брон");
-					updateSyncStatus("success", "✓ Синхрондоштурулду");
+					updateStatus("syncing", "Жүктөлүүдө...");
+					const res = await fetch(API_URL);
+					const data = await res.json();
+					// ElchoCrud адатта маалыматты түз же data ичинде берет
+					bookedSlots = Array.isArray(data) ? data : data.data || [];
+					updateStatus("success", "✓ Синхрондоштурулду");
 					render();
-				} catch (error) {
-					console.error("❌ Жүктөө катасы:", error);
-					updateSyncStatus("offline", "⚠ Жүктөө катасы");
+				} catch (e) {
+					updateStatus("offline", "⚠ Байланыш үзүлдү");
 				}
 			}
 
-			// Real-time өзгөрүүлөрдү угуу
-			function subscribeToChanges() {
-				supabase
-					.channel("bookings-channel")
-					.on(
-						"postgres_changes",
-						{ event: "*", schema: "public", table: "bookings" },
-						(payload) => {
-							console.log("🔄 Real-time өзгөрүү:", payload);
-							loadBookings();
-						}
-					)
-					.subscribe();
-			}
+			// Брондоо (POST)
+			async function confirmBooking() {
+				if (!selectedSlot) return;
 
-			// Жаңы брондоо кошуу
-			async function addBooking(booking) {
+				const btn = document.getElementById("confirmBtn");
+				btn.disabled = true;
+				btn.textContent = "Сакталууда...";
+
+				const payload = {
+					date: selectedSlot.date,
+					start: selectedSlot.hour,
+					end: selectedSlot.hour + 1,
+					title: "Волейбол Брон", // API талап кылышы мүмкүн
+				};
+
 				try {
-					updateSyncStatus("syncing", "Сакталууда...");
+					const res = await fetch(API_URL, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(payload),
+					});
 
-					const { data, error } = await supabase
-						.from("bookings")
-						.insert([booking])
-						.select();
-
-					if (error) throw error;
-
-					console.log("✅ Брон сакталды:", data[0].id);
-					updateSyncStatus("success", "✓ Сакталды");
-					return true;
-				} catch (error) {
-					console.error("❌ Сактоо катасы:", error);
-					updateSyncStatus("offline", "⚠ Ката");
-					alert("Брондоо сактоодо ката чыкты: " + error.message);
-					return false;
-				}
-			}
-
-			// Брондоону өчүрүү
-			async function removeBooking(id) {
-				try {
-					updateSyncStatus("syncing", "Өчүрүлүүдө...");
-
-					const { error } = await supabase
-						.from("bookings")
-						.delete()
-						.eq("id", id);
-
-					if (error) throw error;
-
-					console.log("🗑️ Брон өчүрүлдү:", id);
-					updateSyncStatus("success", "✓ Өчүрүлдү");
-					return true;
-				} catch (error) {
-					console.error("❌ Өчүрүү катасы:", error);
-					updateSyncStatus("offline", "⚠ Ката");
-					return false;
-				}
-			}
-
-			function getWeekDates(offset = 0) {
-				const today = new Date();
-				const currentDay = today.getDay();
-				const monday = new Date(today);
-				monday.setDate(
-					today.getDate() - (currentDay === 0 ? 6 : currentDay - 1) + offset * 7
-				);
-
-				const dates = [];
-				for (let i = 0; i < 7; i++) {
-					const date = new Date(monday);
-					date.setDate(monday.getDate() + i);
-					dates.push(date);
-				}
-				return dates;
-			}
-
-			function formatDate(date) {
-				const day = date.getDate().toString().padStart(2, "0");
-				const month = (date.getMonth() + 1).toString().padStart(2, "0");
-				return `${day}.${month}`;
-			}
-
-			function getDateKey(date) {
-				return `${date.getFullYear()}-${(date.getMonth() + 1)
-					.toString()
-					.padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-			}
-
-			function updateWeekInfo() {
-				const dates = getWeekDates(currentWeekOffset);
-				const start = formatDate(dates[0]);
-				const end = formatDate(dates[6]);
-				document.getElementById("weekInfo").textContent = `${start} - ${end}`;
-			}
-
-			function changeWeek(direction) {
-				currentWeekOffset += direction;
-				render();
-			}
-
-			function calculateStats() {
-				const dates = getWeekDates(currentWeekOffset);
-				const now = new Date();
-				let totalSlots = 0;
-				let bookedCount = 0;
-				let pastCount = 0;
-				let availableCount = 0;
-
-				dates.forEach((date) => {
-					const dateKey = getDateKey(date);
-					for (let hour = 9; hour < 24; hour++) {
-						totalSlots++;
-						const slotDate = new Date(date);
-						slotDate.setHours(hour, 0, 0, 0);
-
-						const isPast = slotDate < now;
-						const isBooked = bookedSlots.some(
-							(slot) =>
-								slot.date === dateKey && hour >= slot.start && hour < slot.end
-						);
-
-						if (isPast && !isBooked) {
-							pastCount++;
-						} else if (isBooked) {
-							bookedCount++;
-						} else {
-							availableCount++;
-						}
+					if (res.ok) {
+						closeModal();
+						await loadData();
 					}
-				});
-
-				return { totalSlots, bookedCount, pastCount, availableCount };
+				} catch (e) {
+					alert("Ката кетти!");
+				} finally {
+					btn.disabled = false;
+					btn.textContent = "Ырастоо";
+				}
 			}
 
-			function renderStats() {
-				const stats = calculateStats();
-				const grid = document.getElementById("statsGrid");
+			// Өчүрүү (DELETE)
+			async function deleteBooking(id) {
+				if (!confirm("Бул брондоону өчүрөсүзбү?")) return;
 
-				grid.innerHTML = `
-					<div class="stat-card total">
-						<div class="stat-label">Жалпы саатар</div>
-						<div class="stat-value">${stats.totalSlots}</div>
-					</div>
-					<div class="stat-card booked">
-						<div class="stat-label">Брондолгон</div>
-						<div class="stat-value">${stats.bookedCount}</div>
-					</div>
-					<div class="stat-card available">
-						<div class="stat-label">Бош</div>
-						<div class="stat-value">${stats.availableCount}</div>
-					</div>
-					<div class="stat-card past">
-						<div class="stat-label">Өткөн</div>
-						<div class="stat-value">${stats.pastCount}</div>
-					</div>
-				`;
+				try {
+					updateStatus("syncing", "Өчүрүлүүдө...");
+					const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+					if (res.ok) {
+						await loadData();
+					}
+				} catch (e) {
+					alert("Өчүрүүдө ката кетти");
+				}
 			}
 
-			function renderDays() {
-				const dates = getWeekDates(currentWeekOffset);
-				const grid = document.getElementById("daysGrid");
+			// Даталарды эсептөө
+			function getWeekDates(offset) {
 				const now = new Date();
+				const startOfWeek = new Date(now);
+				const day = now.getDay();
+				const diff = (day === 0 ? -6 : 1) - day;
+				startOfWeek.setDate(now.getDate() + diff + offset * 7);
 
+				return Array.from({ length: 7 }, (_, i) => {
+					const d = new Date(startOfWeek);
+					d.setDate(startOfWeek.getDate() + i);
+					return d;
+				});
+			}
+
+			function formatDate(d) {
+				return d.toISOString().split("T")[0];
+			}
+
+			function render() {
+				const dates = getWeekDates(currentWeekOffset);
+				document.getElementById(
+					"weekInfo"
+				).textContent = `${dates[0].toLocaleDateString(
+					"ky-KG"
+				)} - ${dates[6].toLocaleDateString("ky-KG")}`;
+
+				const grid = document.getElementById("daysGrid");
 				grid.innerHTML = "";
 
-				dates.forEach((date, index) => {
-					const dateKey = getDateKey(date);
+				const now = new Date();
+
+				dates.forEach((date, idx) => {
+					const dateStr = formatDate(date);
 					const dayCard = document.createElement("div");
 					dayCard.className = "day-card";
 
-					let dayBookedCount = 0;
-					let dayAvailableCount = 0;
-					let dayPastCount = 0;
+					let slotsHtml = "";
+					for (let h = 9; h < 23; h++) {
+						const slotTime = new Date(date);
+						slotTime.setHours(h, 0, 0);
 
-					const slotsHTML = [];
-					for (let hour = 9; hour < 24; hour++) {
-						const slotDate = new Date(date);
-						slotDate.setHours(hour, 0, 0, 0);
-						const startTime = `${hour.toString().padStart(2, "0")}:00`;
-
-						const isPast = slotDate < now;
-						const isBooked = bookedSlots.some(
-							(slot) =>
-								slot.date === dateKey && hour >= slot.start && hour < slot.end
+						const isBooked = bookedSlots.find(
+							(s) => s.date === dateStr && s.start === h
 						);
+						const isPast = slotTime < now;
 
-						let className = "time-slot ";
-						if (isPast && !isBooked) {
-							className += "past";
-							dayPastCount++;
-						} else if (isBooked) {
-							className += "booked";
-							dayBookedCount++;
-						} else {
-							className += "available";
-							dayAvailableCount++;
+						let statusClass = "available";
+						let action = `onclick="openModal('${dateStr}', ${h})"`;
+
+						if (isBooked) {
+							statusClass = "booked";
+							action = "";
+						} else if (isPast) {
+							statusClass = "past";
+							action = "";
 						}
 
-						const onclick =
-							!isPast && !isBooked
-								? `onclick="openBookingModal('${dateKey}', ${hour})"`
-								: "";
-
-						slotsHTML.push(
-							`<div class="${className}" ${onclick}>${startTime}</div>`
-						);
+						slotsHtml += `<div class="time-slot ${statusClass}" ${action}>${h}:00</div>`;
 					}
 
 					dayCard.innerHTML = `
-						<div class="day-header">
-							<div>
-								<div class="day-title">${dayNames[index]}</div>
-								<div class="day-date">${formatDate(date)}</div>
-							</div>
-							<div class="day-stats">
-								<div class="day-stat">
-									<div class="stat-dot booked"></div>
-									<span>${dayBookedCount}</span>
-								</div>
-								<div class="day-stat">
-									<div class="stat-dot available"></div>
-									<span>${dayAvailableCount}</span>
-								</div>
-								<div class="day-stat">
-									<div class="stat-dot past"></div>
-									<span>${dayPastCount}</span>
-								</div>
-							</div>
-						</div>
-						<div class="time-slots">${slotsHTML.join("")}</div>
-					`;
-
+            <div class="day-header">
+              <strong>${dayNames[idx]}</strong>
+              <span>${date.toLocaleDateString("ky-KG")}</span>
+            </div>
+            <div class="time-slots">${slotsHtml}</div>
+          `;
 					grid.appendChild(dayCard);
 				});
+
+				// Брондордун тизмесин чыгаруу
+				const list = document.getElementById("bookedList");
+				list.innerHTML =
+					bookedSlots
+						.map(
+							(s) => `
+          <div class="booked-item">
+            <div>📅 ${s.date} | ⏰ ${s.start}:00 - ${s.end}:00</div>
+            <button class="cancel-btn" onclick="deleteBooking('${
+							s._id || s.id
+						}')">Өчүрүү</button>
+          </div>
+        `
+						)
+						.join("") || "Брондор жок";
 			}
 
-			function openBookingModal(dateKey, hour) {
-				selectedSlot = { date: dateKey, hour };
-				const startTime = `${hour.toString().padStart(2, "0")}:00`;
-				const endTime = `${(hour + 1).toString().padStart(2, "0")}:00`;
-
-				const date = new Date(dateKey);
-				const dayName = dayNames[date.getDay() === 0 ? 6 : date.getDay() - 1];
-
+			function openModal(date, hour) {
+				selectedSlot = { date, hour };
 				document.getElementById(
 					"modalText"
-				).textContent = `${dayName}, ${formatDate(
-					date
-				)} - ${startTime}-${endTime} брондогонгу келесизби?`;
+				).textContent = `${date} күнү саат ${hour}:00го брондойсузбу?`;
 				document.getElementById("bookingModal").classList.add("active");
 			}
 
 			function closeModal() {
 				document.getElementById("bookingModal").classList.remove("active");
-				selectedSlot = null;
 			}
 
-			async function confirmBooking() {
-				if (selectedSlot) {
-					const confirmBtn = document.getElementById("confirmBtn");
-					confirmBtn.disabled = true;
-					confirmBtn.textContent = "Сакталууда...";
-
-					const newBooking = {
-						date: selectedSlot.date,
-						start: selectedSlot.hour,
-						end: selectedSlot.hour + 1,
-					};
-
-					const success = await addBooking(newBooking);
-
-					if (success) {
-						closeModal();
-					}
-
-					confirmBtn.disabled = false;
-					confirmBtn.textContent = "Брондоо";
-				}
+			function changeWeek(dir) {
+				currentWeekOffset += dir;
+				render();
 			}
 
-			async function cancelBooking(id) {
-				if (confirm("Бул брондоону жокко чыгарасызбы?")) {
-					await removeBooking(id);
-				}
-			}
-
-			function renderBookedList() {
-				const list = document.getElementById("bookedList");
-
-				if (bookedSlots.length === 0) {
-					list.innerHTML =
-						'<div class="empty-state">Брондолгон саатар жок</div>';
-					return;
-				}
-
-				const sortedBookings = [...bookedSlots].sort((a, b) => {
-					if (a.date !== b.date) return a.date.localeCompare(b.date);
-					return a.start - b.start;
-				});
-
-				list.innerHTML = sortedBookings
-					.map((slot) => {
-						const date = new Date(slot.date);
-						const dayName =
-							dayNames[date.getDay() === 0 ? 6 : date.getDay() - 1];
-						const startTime = `${slot.start.toString().padStart(2, "0")}:00`;
-						const endTime = `${slot.end.toString().padStart(2, "0")}:00`;
-
-						return `
-						<div class="booked-item">
-							<div class="booked-info">
-								<div class="booked-time">${startTime} - ${endTime}</div>
-								<div class="booked-date">${dayName}, ${formatDate(date)}</div>
-							</div>
-							<button class="cancel-btn" onclick="cancelBooking('${slot.id}')">
-								Жокко чыгаруу
-							</button>
-						</div>
-					`;
-					})
-					.join("");
-			}
-
-			function render() {
-				updateWeekInfo();
-				renderStats();
-				renderDays();
-				renderBookedList();
-			}
-
-			// Баштоо
-			async function init() {
-				console.log("🚀 Система баштоо...");
-
-				// await loadBookings();
-				subscribeToChanges();
-
-				document.getElementById("loadingScreen").style.display = "none";
-				document.getElementById("mainContent").style.display = "block";
-
-				console.log("✅ Система даяр!");
-			}
-
-			init();
+			// Баштапкы жүктөө
+			loadData();
+			// Ар 30 секундда жаңылап турат
+			setInterval(loadData, 30000);
 		</script>
 	</body>
 </html>

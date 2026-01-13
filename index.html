@@ -3,9 +3,9 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Валейбол Залы - Брондоо Системасы</title>
+		<title>Волейбол Залы</title>
 		<style>
-			/* Сиздин оригиналдуу стилдериңиз сакталды */
+			/* --- СТИЛДЕР (Өзгөртүүсүз калды, бир аз кошумчаланды) --- */
 			* {
 				margin: 0;
 				padding: 0;
@@ -13,76 +13,93 @@
 			}
 			body {
 				font-family: "Inter", sans-serif;
-				background: #f8fafc;
-				padding: 20px;
+				background: #f1f5f9;
 				color: #1e293b;
 			}
+
+			/* Башкы баракча үчүн стилдер */
+			#home-page {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				text-align: center;
+			}
+			.welcome-text {
+				font-size: 32px;
+				font-weight: 800;
+				color: #0f172a;
+				margin-bottom: 20px;
+			}
+			.admin-link {
+				text-decoration: none;
+				background: #3b82f6;
+				color: white;
+				padding: 12px 24px;
+				border-radius: 12px;
+				font-weight: 600;
+			}
+
+			/* Админ баракча үчүн стилдер */
+			#admin-page {
+				display: none;
+				padding: 15px;
+			}
 			.container {
-				max-width: 1200px;
+				max-width: 1000px;
 				margin: 0 auto;
 			}
 			.header {
 				background: white;
-				border-radius: 16px;
-				padding: 24px;
-				margin-bottom: 24px;
-				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+				border-radius: 20px;
+				padding: 20px;
+				margin-bottom: 20px;
+				text-align: center;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 			}
+			.back-btn {
+				margin-bottom: 10px;
+				display: inline-block;
+				color: #64748b;
+				text-decoration: none;
+				font-size: 14px;
+			}
+
+			/* Калган бардык функционалдык стилдер (мурунку коддогудай) */
 			.sync-status {
 				display: inline-flex;
 				align-items: center;
 				gap: 8px;
 				padding: 6px 12px;
-				border-radius: 6px;
-				font-size: 13px;
-				margin-top: 8px;
+				border-radius: 50px;
+				font-size: 12px;
+				margin-top: 10px;
 			}
 			.success {
-				background: #f0fdf4;
+				background: #dcfce7;
 				color: #166534;
-				border: 1px solid #bbf7d0;
 			}
 			.syncing {
-				background: #fef3c7;
-				color: #92400e;
-				border: 1px solid #fde68a;
-			}
-			.offline {
-				background: #fee2e2;
-				color: #991b1b;
-				border: 1px solid #fecaca;
+				background: #fef9c3;
+				color: #854d0e;
 			}
 			.week-nav {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				background: white;
-				border-radius: 12px;
-				padding: 15px 20px;
-				margin-bottom: 24px;
+				border-radius: 15px;
+				padding: 15px;
+				margin-bottom: 20px;
 			}
 			.nav-btn {
-				background: #f1f5f9;
+				background: #3b82f6;
+				color: white;
 				border: none;
-				padding: 10px 15px;
-				border-radius: 8px;
+				padding: 8px 15px;
+				border-radius: 10px;
 				cursor: pointer;
-			}
-			.stats-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-				gap: 16px;
-				margin-bottom: 24px;
-			}
-			.stat-card {
-				background: white;
-				padding: 20px;
-				border-radius: 12px;
-				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-			}
-			.stat-value {
-				font-size: 24px;
-				font-weight: 700;
 			}
 			.days-grid {
 				display: grid;
@@ -90,44 +107,69 @@
 			}
 			.day-card {
 				background: white;
-				border-radius: 12px;
+				border-radius: 18px;
 				padding: 20px;
-				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 			}
 			.day-header {
 				display: flex;
 				justify-content: space-between;
-				margin-bottom: 15px;
-				border-bottom: 1px solid #f1f5f9;
+				border-bottom: 2px solid #f8fafc;
 				padding-bottom: 10px;
+				margin-bottom: 15px;
 			}
 			.time-slots {
 				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-				gap: 8px;
+				grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+				gap: 10px;
 			}
 			.time-slot {
-				padding: 10px;
-				border-radius: 8px;
+				padding: 10px 5px;
+				border-radius: 10px;
 				text-align: center;
 				cursor: pointer;
 				border: 1px solid #e2e8f0;
-				font-weight: 500;
+				font-weight: 600;
+				font-size: 13px;
 			}
 			.available {
-				background: #f0fdf4;
-				color: #166534;
+				color: #16a34a;
+				border-color: #bbf7d0;
 			}
 			.booked {
-				background: #fef2f2;
-				color: #991b1b;
+				background: #fee2e2;
+				color: #dc2626;
+				border-color: #fecaca;
 				cursor: not-allowed;
 			}
 			.past {
-				background: #f1f5f9;
+				background: #f8fafc;
 				color: #94a3b8;
 				cursor: not-allowed;
 			}
+			.booked-section {
+				margin-top: 30px;
+				background: white;
+				padding: 20px;
+				border-radius: 20px;
+			}
+			.booked-item {
+				display: flex;
+				justify-content: space-between;
+				padding: 12px;
+				border-bottom: 1px solid #f1f5f9;
+				align-items: center;
+			}
+			.cancel-btn {
+				background: #ef4444;
+				color: white;
+				border: none;
+				padding: 6px 12px;
+				border-radius: 6px;
+				cursor: pointer;
+			}
+
+			/* Модалка */
 			.modal {
 				display: none;
 				position: fixed;
@@ -135,85 +177,53 @@
 				left: 0;
 				width: 100%;
 				height: 100%;
-				background: rgba(0, 0, 0, 0.5);
+				background: rgba(0, 0, 0, 0.6);
 				align-items: center;
 				justify-content: center;
-				z-index: 100;
+				z-index: 1000;
 			}
 			.modal.active {
 				display: flex;
 			}
 			.modal-content {
 				background: white;
-				padding: 30px;
-				border-radius: 12px;
+				padding: 25px;
+				border-radius: 20px;
 				width: 90%;
-				max-width: 400px;
-			}
-			.modal-buttons {
-				display: flex;
-				gap: 10px;
-				margin-top: 20px;
-			}
-			.modal-btn {
-				flex: 1;
-				padding: 10px;
-				border-radius: 6px;
-				border: none;
-				cursor: pointer;
-				font-weight: 600;
-			}
-			.confirm {
-				background: #16a34a;
-				color: white;
-			}
-			.cancel {
-				background: #f1f5f9;
-			}
-			.booked-section {
-				margin-top: 30px;
-				background: white;
-				padding: 20px;
-				border-radius: 12px;
-			}
-			.booked-item {
-				display: flex;
-				justify-content: space-between;
-				padding: 10px;
-				border-bottom: 1px solid #eee;
-				align-items: center;
-			}
-			.cancel-btn {
-				background: #dc2626;
-				color: white;
-				border: none;
-				padding: 5px 10px;
-				border-radius: 4px;
-				cursor: pointer;
+				max-width: 320px;
+				text-align: center;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="container">
-			<div class="header">
-				<h1>🏐 Валейбол Залы</h1>
-				<div class="sync-status" id="syncStatus">
-					<span id="syncText">Жүктөлүүдө...</span>
-				</div>
-			</div>
+		<div id="home-page">
+			<h1 class="welcome-text">Ассаламу алейкум!</h1>
+			<p style="color: #64748b; margin-bottom: 30px">
+				Волейбол залынын брондоо системасына кош келиңиз.
+			</p>
+			<!-- <a href="#/admin" class="admin-link">Админ панелге өтүү</a> -->
+		</div>
 
-			<div id="mainContent">
+		<div id="admin-page">
+			<div class="container">
+				<a href="#" class="back-btn">← Башкыга кайт</a>
+				<div class="header">
+					<h1>🏐 Админ Панель</h1>
+					<div class="sync-status" id="syncStatus">
+						<span id="syncText">Жүктөлүүдө...</span>
+					</div>
+				</div>
+
 				<div class="week-nav">
-					<button class="nav-btn" onclick="changeWeek(-1)">← Мурунку</button>
+					<button class="nav-btn" onclick="changeWeek(-1)">←</button>
 					<div id="weekInfo" style="font-weight: bold"></div>
-					<button class="nav-btn" onclick="changeWeek(1)">Кийинки →</button>
+					<button class="nav-btn" onclick="changeWeek(1)">→</button>
 				</div>
 
-				<div class="stats-grid" id="statsGrid"></div>
 				<div class="days-grid" id="daysGrid"></div>
 
 				<div class="booked-section">
-					<h2>Сиздин брондоруңуз (Жалпы тизме)</h2>
+					<h2 style="margin-bottom: 15px">📅 Бардык брондор</h2>
 					<div id="bookedList"></div>
 				</div>
 			</div>
@@ -221,16 +231,23 @@
 
 		<div class="modal" id="bookingModal">
 			<div class="modal-content">
-				<h2>Брондоо</h2>
-				<p id="modalText"></p>
-				<div class="modal-buttons">
+				<h3>Брондоо</h3>
+				<p
+					id="modalText"
+					style="margin: 15px 0; color: #64748b; font-size: 14px"></p>
+				<div style="display: flex; gap: 10px">
 					<button
-						class="modal-btn confirm"
+						class="nav-btn"
 						id="confirmBtn"
+						style="flex: 1"
 						onclick="confirmBooking()">
-						Ырастоо
+						Ооба
 					</button>
-					<button class="modal-btn cancel" onclick="closeModal()">Жок</button>
+					<button
+						onclick="closeModal()"
+						style="flex: 1; border: none; border-radius: 10px; cursor: pointer">
+						Жок
+					</button>
 				</div>
 			</div>
 		</div>
@@ -238,10 +255,9 @@
 		<script>
 			const API_URL =
 				"https://api-crud.elcho.dev/api/v1/d8281-f9a3a-6931f/booking";
-
 			let bookedSlots = [];
-			let selectedSlot = null;
 			let currentWeekOffset = 0;
+			let selectedSlot = null;
 			const dayNames = [
 				"Дүйшөмбү",
 				"Шейшемби",
@@ -252,162 +268,134 @@
 				"Жекшемби",
 			];
 
+			// --- РОУТИНГ (Баракчаларды которуу) ---
+			function handleRoute() {
+				const path = window.location.hash;
+				if (path === "#/admin") {
+					document.getElementById("home-page").style.display = "none";
+					document.getElementById("admin-page").style.display = "block";
+					loadData(); // Админге киргенде маалыматты жүктөө
+				} else {
+					document.getElementById("home-page").style.display = "flex";
+					document.getElementById("admin-page").style.display = "none";
+				}
+			}
+
+			window.addEventListener("hashchange", handleRoute);
+			window.addEventListener("load", handleRoute);
+
+			// --- АДМИН ЛОГИКАСЫ ---
 			function updateStatus(type, text) {
 				const el = document.getElementById("syncStatus");
-				el.className = "sync-status " + type;
-				document.getElementById("syncText").textContent = text;
+				if (el) {
+					el.className = "sync-status " + type;
+					document.getElementById("syncText").textContent = text;
+				}
 			}
 
-			// API аркылуу маалымат алуу
 			async function loadData() {
 				try {
-					updateStatus("syncing", "Жүктөлүүдө...");
+					updateStatus("syncing", "Жаңыланууда...");
 					const res = await fetch(API_URL);
 					const data = await res.json();
-					// ElchoCrud адатта маалыматты түз же data ичинде берет
-					bookedSlots = Array.isArray(data) ? data : data.data || [];
-					updateStatus("success", "✓ Синхрондоштурулду");
+					bookedSlots = (Array.isArray(data) ? data : data.data || []).sort(
+						(a, b) => a.date.localeCompare(b.date) || a.start - b.start
+					);
+					updateStatus("success", "● Онлайн");
 					render();
 				} catch (e) {
-					updateStatus("offline", "⚠ Байланыш үзүлдү");
+					updateStatus("offline", "○ Ката");
 				}
 			}
 
-			// Брондоо (POST)
 			async function confirmBooking() {
 				if (!selectedSlot) return;
-
-				const btn = document.getElementById("confirmBtn");
-				btn.disabled = true;
-				btn.textContent = "Сакталууда...";
-
-				const payload = {
-					date: selectedSlot.date,
-					start: selectedSlot.hour,
-					end: selectedSlot.hour + 1,
-					title: "Волейбол Брон", // API талап кылышы мүмкүн
-				};
-
 				try {
-					const res = await fetch(API_URL, {
+					await fetch(API_URL, {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(payload),
+						body: JSON.stringify({
+							date: selectedSlot.date,
+							start: selectedSlot.hour,
+							end: selectedSlot.hour + 1,
+						}),
 					});
-
-					if (res.ok) {
-						closeModal();
-						await loadData();
-					}
+					closeModal();
+					loadData();
 				} catch (e) {
-					alert("Ката кетти!");
-				} finally {
-					btn.disabled = false;
-					btn.textContent = "Ырастоо";
+					alert("Ката!");
 				}
 			}
 
-			// Өчүрүү (DELETE)
 			async function deleteBooking(id) {
-				if (!confirm("Бул брондоону өчүрөсүзбү?")) return;
-
-				try {
-					updateStatus("syncing", "Өчүрүлүүдө...");
-					const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-					if (res.ok) {
-						await loadData();
-					}
-				} catch (e) {
-					alert("Өчүрүүдө ката кетти");
+				if (confirm("Өчүрөсүзбү?")) {
+					await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+					loadData();
 				}
 			}
 
-			// Даталарды эсептөө
-			function getWeekDates(offset) {
+			function render() {
 				const now = new Date();
 				const startOfWeek = new Date(now);
-				const day = now.getDay();
-				const diff = (day === 0 ? -6 : 1) - day;
-				startOfWeek.setDate(now.getDate() + diff + offset * 7);
+				startOfWeek.setDate(
+					now.getDate() +
+						((now.getDay() === 0 ? -6 : 1) - now.getDay()) +
+						currentWeekOffset * 7
+				);
 
-				return Array.from({ length: 7 }, (_, i) => {
+				const dates = Array.from({ length: 7 }, (_, i) => {
 					const d = new Date(startOfWeek);
 					d.setDate(startOfWeek.getDate() + i);
 					return d;
 				});
-			}
 
-			function formatDate(d) {
-				return d.toISOString().split("T")[0];
-			}
-
-			function render() {
-				const dates = getWeekDates(currentWeekOffset);
 				document.getElementById(
 					"weekInfo"
-				).textContent = `${dates[0].toLocaleDateString(
-					"ky-KG"
-				)} - ${dates[6].toLocaleDateString("ky-KG")}`;
+				).textContent = `${dates[0].getDate()}.${
+					dates[0].getMonth() + 1
+				} - ${dates[6].getDate()}.${dates[6].getMonth() + 1}`;
 
 				const grid = document.getElementById("daysGrid");
 				grid.innerHTML = "";
 
-				const now = new Date();
-
 				dates.forEach((date, idx) => {
-					const dateStr = formatDate(date);
-					const dayCard = document.createElement("div");
-					dayCard.className = "day-card";
-
+					const dateStr = date.toISOString().split("T")[0];
 					let slotsHtml = "";
-					for (let h = 9; h < 23; h++) {
-						const slotTime = new Date(date);
-						slotTime.setHours(h, 0, 0);
-
+					for (let h = 9; h < 24; h++) {
 						const isBooked = bookedSlots.find(
-							(s) => s.date === dateStr && s.start === h
+							(s) => s.date === dateStr && parseInt(s.start) === h
 						);
-						const isPast = slotTime < now;
-
-						let statusClass = "available";
-						let action = `onclick="openModal('${dateStr}', ${h})"`;
-
-						if (isBooked) {
-							statusClass = "booked";
-							action = "";
-						} else if (isPast) {
-							statusClass = "past";
-							action = "";
-						}
-
-						slotsHtml += `<div class="time-slot ${statusClass}" ${action}>${h}:00</div>`;
+						const isPast = new Date(date).setHours(h, 0, 0) < now;
+						let cls = isBooked ? "booked" : isPast ? "past" : "available";
+						let act =
+							!isBooked && !isPast
+								? `onclick="openModal('${dateStr}', ${h})"`
+								: "";
+						slotsHtml += `<div class="time-slot ${cls}" ${act}>${h}:00</div>`;
 					}
-
-					dayCard.innerHTML = `
-            <div class="day-header">
-              <strong>${dayNames[idx]}</strong>
-              <span>${date.toLocaleDateString("ky-KG")}</span>
-            </div>
-            <div class="time-slots">${slotsHtml}</div>
-          `;
-					grid.appendChild(dayCard);
+					grid.innerHTML += `
+            <div class="day-card">
+              <div class="day-header"><strong>${
+								dayNames[idx]
+							}</strong> <span>${date.getDate()}.${
+						date.getMonth() + 1
+					}</span></div>
+              <div class="time-slots">${slotsHtml}</div>
+            </div>`;
 				});
 
-				// Брондордун тизмесин чыгаруу
-				const list = document.getElementById("bookedList");
-				list.innerHTML =
+				document.getElementById("bookedList").innerHTML =
 					bookedSlots
 						.map(
 							(s) => `
           <div class="booked-item">
-            <div>📅 ${s.date} | ⏰ ${s.start}:00 - ${s.end}:00</div>
+            <div><b>${s.date}</b> | ${s.start}:00</div>
             <button class="cancel-btn" onclick="deleteBooking('${
 							s._id || s.id
 						}')">Өчүрүү</button>
-          </div>
-        `
+          </div>`
 						)
-						.join("") || "Брондор жок";
+						.join("") || "Тизме бош";
 			}
 
 			function openModal(date, hour) {
@@ -417,20 +405,13 @@
 				).textContent = `${date} күнү саат ${hour}:00го брондойсузбу?`;
 				document.getElementById("bookingModal").classList.add("active");
 			}
-
 			function closeModal() {
 				document.getElementById("bookingModal").classList.remove("active");
 			}
-
 			function changeWeek(dir) {
 				currentWeekOffset += dir;
 				render();
 			}
-
-			// Баштапкы жүктөө
-			loadData();
-			// Ар 30 секундда жаңылап турат
-			setInterval(loadData, 30000);
 		</script>
 	</body>
 </html>

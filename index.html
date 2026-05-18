@@ -314,7 +314,6 @@
 				}
 			}
 
-			// Саатты форматтоо (24:00 -> 00:00, 25:00 -> 01:00)
 			function formatHour(h) {
 				if (h === 24) return "00:00";
 				if (h > 24) return `0${h - 24}:00`;
@@ -348,13 +347,11 @@
 					const dateStr = date.toISOString().split("T")[0];
 					let slotsHtml = "";
 
-					// СААТТАР: 09:00дөн түнкү 02:00гө чейин (26га чейин)
 					for (let h = 9; h < 26; h++) {
 						const isBooked = bookedSlots.find(
 							(s) => s.date === dateStr && parseInt(s.start) === h
 						);
 
-						// Өткөн убакытты текшерүү
 						const slotTime = new Date(date);
 						slotTime.setHours(h, 0, 0);
 						const isPast = slotTime < now;
